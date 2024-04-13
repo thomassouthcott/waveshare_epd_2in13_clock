@@ -45,6 +45,16 @@ def display_time(epd, args):
     time_draw.text((120, 80), args[0], font = font24, fill = 0)
     epd.displayPartial(epd.getbuffer(time_image))
 
+def display_fullscreen_image(epd, args):
+    if(len(line.strip().split("."))>1 and not (args[0].split(".")[1].lower() == "bmp")):
+        logging.error("Invalid arguments. Please provide a file .bmp file.")
+        return
+    path=os.path.join(bmpdir, args[0])
+    if(not os.path.exists(path)):
+        logging.error(f"File not found at bmp/{args[0]}")
+    image = Image.open(path)
+    epd.display_fast(epd.getbuffer(image))
+
 def shutdown(epd, args=None):
     if(args!=None):
         logging.info("No arguments required for shutdown. Ignoring the arguments.") 
