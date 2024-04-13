@@ -85,6 +85,7 @@ try:
         switcher = {
             "display_current_time": display_current_time,
             "display_time": display_time,
+            "display_fullscreen_image": display_fullscreen_image,
             "exit": shutdown
         }
         switcher.get(command, lambda epd, args: logging.info(f'Command not recognised.\n\tValid Commands are: {switcher.keys()}'))(epd, args)
