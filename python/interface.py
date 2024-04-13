@@ -55,6 +55,16 @@ def display_fullscreen_image(epd, args):
     image = Image.open(path)
     epd.display_fast(epd.getbuffer(image))
 
+def display_image(epd, args):
+    if(len(line.strip().split("."))>1 and not (args[0].split(".")[1].lower() == "bmp")):
+        logging.error("Invalid arguments. Please provide a file .bmp file.")
+        return
+    path=os.path.join(bmpdir, args[0])
+    if(not os.path.exists(path)):
+        logging.error(f"File not found at bmp/{args[0]}")
+    image = Image.open(path)
+    epd.displayPartBaseImage(epd.getbuffer(image))
+
 def shutdown(epd, args=None):
     if(args!=None):
         logging.info("No arguments required for shutdown. Ignoring the arguments.") 
@@ -86,6 +96,7 @@ try:
             "display_current_time": display_current_time,
             "display_time": display_time,
             "display_fullscreen_image": display_fullscreen_image,
+            "display_image": display_image,
             "exit": shutdown
         }
         switcher.get(command, lambda epd, args: logging.info(f'Command not recognised.\n\tValid Commands are: {switcher.keys()}'))(epd, args)
