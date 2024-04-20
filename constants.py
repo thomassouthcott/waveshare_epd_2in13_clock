@@ -5,11 +5,11 @@ import logging
 import os
 
 
-bmpdir = os.path.join(
+picdir = os.path.join(
     os.path.dirname(
         os.path.realpath(__file__)
     ),
-    'bmp'
+    'pic'
 )
 
 # Enums
@@ -61,9 +61,9 @@ class FrameConfig:
         self.h_alignment = HorizontalAlignment[config["FRAME"]["H_ALIGNMENT"]]
         filename=config["FRAME"]["DEFAULT_BACKGROUND"]
 
-        path=os.path.join(bmpdir, filename)
+        path=os.path.join(picdir, filename)
         if not os.path.exists(path):
-            logging.error("File not found at bmp/%s",path)
+            logging.error("File not found at pic/%s",path)
             raise FileNotFoundError()
         self.default_background = filename
 
