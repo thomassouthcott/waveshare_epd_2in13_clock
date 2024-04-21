@@ -3,7 +3,7 @@
 import logging
 import time
 
-from lib.FrameBuilder.panel import Panel
+from lib.frame_builder.panel import Panel
 
 from constants import get_config
 
@@ -11,14 +11,9 @@ logger = logging.getLogger(get_config().prog)
 
 class ClockPanel(Panel):
     """Clock Panel class, displays the current time."""
-    def __init__(self, v_align, h_align):
-        super().__init__(
-            get_config().frame.clock_dimensions,
-            v_align,
-            h_align,
-            "Clock",
-            time.strftime('%H:%M'),
-            32)
+    def __init__(self, alignment):
+        super().__init__(get_config().frame.clock_dimensions, alignment, "Clock",
+                         time.strftime('%H:%M'), 32)
         self._imagedraw.text((0,0), self._text, font = self._font, fill = 0)
 
     # Draw the time on the image

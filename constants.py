@@ -1,5 +1,6 @@
 """constants.py: Constants and Enums"""
 import configparser
+import dataclasses
 from enum import Enum
 import logging
 import os
@@ -15,7 +16,7 @@ picdir = os.path.join(
 # Enums
 class InfoTypes(Enum):
     """Enum for the different types of panels that can be displayed on the Info Panel"""
-    TEXT = "text",
+    TEXT = "text"
     WEATHER = "weather"
 
 class BannerTypes(Enum):
@@ -33,6 +34,7 @@ class HorizontalAlignment(Enum):
     RIGHT = 1
 
 # Configuration Constants
+@dataclasses.dataclass
 class Config:
     """Class to hold the configuration of the program"""
     def __init__(self, path="config.ini"):
@@ -48,12 +50,14 @@ class Config:
         self.logging = LoggingConfig(config)
         self.frame = FrameConfig(config)
 
+@dataclasses.dataclass
 class LoggingConfig:
     """Class to hold the logging configuration"""
     def __init__(self, config):
         self.level = logging.getLevelName(config["LOGGING"]["LEVEL"])
         self.file = config["LOGGING"]["FILE"]
 
+@dataclasses.dataclass
 class FrameConfig:
     """Class to hold the frame configuration"""
     def __init__(self, config):

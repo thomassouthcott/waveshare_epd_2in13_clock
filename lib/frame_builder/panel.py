@@ -12,18 +12,10 @@ logger = logging.getLogger(get_config().prog)
 
 class Panel:
     """Panel class, displays a box with 1px border."""
-    def __init__(self,
-                dimensions,
-                vertical_alignment,
-                horizontal_alignment,
-                logname,
-                text,
-                fontsize=24):
+    def __init__(self, dimensions, alignment, logname = "Base Panel",
+                 text= "loading...", fontsize=24):
         self._font = ImageFont.truetype(os.path.join(picdir, 'Font.ttc'), fontsize)
-        self._alignment = (
-            vertical_alignment,
-            horizontal_alignment
-        )
+        self._alignment = alignment
         self._dimensions = dimensions
         self._image = self._image_factory()
         self._imagedraw = ImageDraw.Draw(self._image)
