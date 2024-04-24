@@ -8,7 +8,7 @@ import asyncio
 from lib.frame_builder.frame import Frame
 from lib.epd_driver import EPDDriver
 
-from constants import get_config
+from config import get_config
 
 logger = logging.getLogger()
 

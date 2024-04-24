@@ -4,7 +4,8 @@ import time
 
 from PIL import Image, ImageOps
 
-from constants import check_image_path, get_image_path, get_all_images, get_config
+from config import get_config
+from image_helper import check_image_path, get_image_path, get_all_images
 
 logger = logging.getLogger()
 

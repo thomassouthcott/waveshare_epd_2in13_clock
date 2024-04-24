@@ -4,7 +4,7 @@ import logging
 
 from lib.waveshare_epd import epd2in13_V4
 
-from constants import get_config
+from config import get_config
 
 log_formatter = logging.Formatter(
     "%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s"

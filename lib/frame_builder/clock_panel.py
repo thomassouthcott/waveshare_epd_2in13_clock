@@ -5,7 +5,7 @@ import time
 
 from lib.frame_builder.panel import Panel
 
-from constants import get_config
+from config import get_config
 
 logger = logging.getLogger()
 

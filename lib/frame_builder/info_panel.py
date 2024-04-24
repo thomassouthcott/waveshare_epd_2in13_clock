@@ -4,7 +4,8 @@ import logging
 
 from PIL import Image,ImageOps
 
-from constants import HorizontalAlignment, get_config, InfoTypes
+from config import get_config
+from constants import HorizontalAlignment, InfoTypes
 from lib.frame_builder.service_panel import ServicePanel
 
 logger = logging.getLogger()

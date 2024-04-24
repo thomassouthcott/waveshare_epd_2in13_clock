@@ -5,7 +5,7 @@ import logging
 
 from PIL import Image
 
-from constants import HorizontalAlignment, VerticalAlignment, get_config
+from constants import HorizontalAlignment, VerticalAlignment
 from lib.frame_builder.background import Background, Slideshow
 from lib.frame_builder.clock_panel import ClockPanel
 import lib.frame_builder.info_panel as InfoPanels

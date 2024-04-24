@@ -4,8 +4,6 @@ import time
 
 from lib.waveshare_epd import epd2in13_V4
 
-from constants import get_config
-
 logger = logging.getLogger()
 
 REFRESH_TIME = 43200

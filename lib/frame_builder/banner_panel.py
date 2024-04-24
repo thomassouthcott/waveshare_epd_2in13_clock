@@ -4,7 +4,8 @@ import logging
 
 from PIL import Image,ImageOps
 
-from constants import get_config, BannerTypes
+from config import get_config
+from constants import BannerTypes
 from lib.frame_builder.service_panel import ServicePanel
 
 logger = logging.getLogger()

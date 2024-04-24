@@ -6,7 +6,8 @@ import os
 
 from PIL import Image,ImageDraw,ImageFont, ImageOps
 
-from constants import get_config, picdir
+from image_helper import picdir
+
 logger = logging.getLogger()
 
 

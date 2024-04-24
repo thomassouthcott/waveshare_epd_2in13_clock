@@ -5,7 +5,8 @@ import logging
 import asyncio
 from aioconsole import AsynchronousCli
 
-from constants import HorizontalAlignment, VerticalAlignment, get_config
+from config import get_config
+from constants import HorizontalAlignment, VerticalAlignment
 import clock
 from lib.frame_builder.info_panel import get_info_types
 
@@ -110,8 +111,8 @@ def main():
     try:
         logger.debug("[Main] Starting main...")
         logger.info(r"""
-        __________        _________ .__                 __    
-        \______   \___.__.\_   ___ \|  |   ____   ____ |  | __
+        _________        _________ .__                 __    
+        \______  \___.__.\_   ___ \|  |   ____   ____ |  | __
         |     ___<   |  |/    \  \/|  |  /  _ \_/ ___\|  |/ /
         |    |    \___  |\     \___|  |_(  <_> )  \___|    < 
         |____|    / ____| \______  /____/\____/ \___  >__|_ \
