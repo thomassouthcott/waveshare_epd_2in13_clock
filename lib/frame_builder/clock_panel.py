@@ -20,9 +20,8 @@ class ClockPanel(Panel):
     def draw(self):
         """Draw the clock panel image."""
         if self._text == time.strftime('%H:%M'):
-            logger.debug("[%s Panel] Time has not changed. Not drawing the time.", self._logname)
-            return None
+            return None, None
         self._text = time.strftime('%H:%M')
         super().draw()
         self._imagedraw.text((0,0), self._text, font = self._font, fill = 0)
-        return self._image
+        return self._image, f"Clock now displays {self._text}"

@@ -14,6 +14,26 @@ picdir = os.path.join(
     'pic'
 )
 
+def get_image_path(filename):
+    """Return the full path of the image."""
+    return os.path.join(picdir, filename)
+
+def check_image_path(filename):
+    """Check if the image path is valid.
+        - Must be a .bmp file
+        - Must exist in the /pic/ directory"""
+    if not filename.endswith(".bmp"):
+        logger.error("File must be a .bmp file")
+        raise ValueError("File must be a .bmp file")
+    if not os.path.exists(get_image_path(filename)):
+        logger.error("File not found at pic/%s",filename)
+        raise FileNotFoundError()
+    return True
+
+def get_all_images():
+    """Return a list of all images in the /pic/ directory"""
+    return [f for f in os.listdir(picdir) if f.endswith(".bmp")]
+
 # Enums
 class InfoTypes(Enum):
     """Enum for the different types of panels that can be displayed on the Info Panel"""
@@ -65,12 +85,12 @@ class FrameConfig:
         self.v_alignment = VerticalAlignment[config["FRAME"]["V_ALIGNMENT"]]
         self.h_alignment = HorizontalAlignment[config["FRAME"]["H_ALIGNMENT"]]
         filename=config["FRAME"]["DEFAULT_BACKGROUND"]
-
-        path=os.path.join(picdir, filename)
-        if not os.path.exists(path):
-            logging.error("File not found at pic/%s",path)
-            raise FileNotFoundError()
-        self.default_background = filename
+        if filename == "":
+            logger.warning("[CONFIG] No default background image specified.")
+            self.default_background = None
+        elif check_image_path(filename):
+            self.default_background = filename
+        self.slide_interval = int(config["FRAME"]["SLIDE_INTERVAL"])
 
         self.clock_dimensions = tuple(map(int, config["FRAME"]["CLOCK_DIMENSIONS"].split(",")))
         self.banner_dimensions = tuple(map(int, config["FRAME"]["BANNER_DIMENSIONS"].split(",")))

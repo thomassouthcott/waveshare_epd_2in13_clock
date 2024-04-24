@@ -25,7 +25,7 @@ def get_banner(panel_type=None, screendimensions=None):
 ##Class for Full-Length Banner panels opposite the time, maybe scrolling text?
 class BannerPanel(ServicePanel):
     """Class for panels that display information opposite the time."""
-    def __init__(self, alignment, logname="BannerPanel", fontsize=14):
+    def __init__(self, alignment, logname="Banner", fontsize=14):
         super().__init__(get_config().frame.banner_dimensions, alignment,
                          logname=logname, fontsize=fontsize)
 

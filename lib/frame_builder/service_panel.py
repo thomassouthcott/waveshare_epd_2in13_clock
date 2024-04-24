@@ -3,7 +3,6 @@ import logging
 
 from lib.frame_builder.panel import Panel
 
-from constants import get_config
 
 logger = logging.getLogger()
 
@@ -14,17 +13,18 @@ class ServicePanel(Panel):
                  fontsize=24):
         super().__init__(dimensions, alignment, logname, text, fontsize)
         self._drawn = False
+        self._latest_change = None
         self._description = "This description is given when the panels command is called."
         super().draw()
 
     def draw(self):
         """Draws the panel."""
         if self._drawn:
-            return None
+            return None, None
         super().draw()
         self._draw()
         self._drawn = True
-        return self._image
+        return self._image, self._latest_change
 
     def _draw(self):
         pass

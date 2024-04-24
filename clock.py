@@ -26,7 +26,21 @@ class Clock():
             (
                 get_config().frame.v_alignment,
                 get_config().frame.h_alignment
+            ),
+            get_config().frame.default_background,
+        )
         logger.info("[Clock] Clock Initialised")
+
+    # Command Line Interface Commands
+    def set_background(self, image):
+        """Set the background of the frame to the specified image."""
+        #TODO: Add a slideshow mode for no input
+        if image is None:
+            logger.info("[Clock] No background image specified. Slideshow mode enabled.")
+            self._frame.set_background_slideshow()
+        else:
+            logger.info("[Clock] Background set to: %s", image)
+            self._frame.set_background(image)
 
     def set_text_panel(self, text):
         """Set the text panel to the specified string."""
@@ -62,6 +76,15 @@ class Clock():
                     self.update_screen()
                 else:
                     await asyncio.sleep(0.33)
+                else:
+                    logger.info(
+                        "[Clock] Updating screen, %s change%s:",
+                        len(changes),
+                        "s" if len(changes) > 1 else ""
+                    )
+                    for change in changes:
+                        logger.info("[Clock] %s",change)
+                    self._epd_driver.update_screen(image)
         except IOError as e:
             logger.error("\tIOError")
             logger.error(e)

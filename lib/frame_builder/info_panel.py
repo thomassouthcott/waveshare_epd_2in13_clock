@@ -48,12 +48,13 @@ class InfoPanel(ServicePanel):
 
 class TextPanel(InfoPanel):
     """Class for panels that display text."""
-    def __init__(self, screen_dimensions, alignment, logname="TextPanel", fontsize=24):
+    def __init__(self, screen_dimensions, alignment, logname="Text", fontsize=24):
         super().__init__(screen_dimensions, alignment, logname, fontsize)
         self._description = "This panel is used to display text."
 
     def _draw(self):
         self._imagedraw.text((0,0), self._text, font = self._font, fill = 0)
+        self._latest_change = f"Text now displays {self._text}"
 
     def set_text(self, text):
         """Set the text of the text panel."""
@@ -62,7 +63,7 @@ class TextPanel(InfoPanel):
 
 class WeatherPanel(InfoPanel):
     """Class for panels that display the weather."""
-    def __init__(self, screen_dimensions, alignment, logname="WeatherPanel", fontsize=24):
+    def __init__(self, screen_dimensions, alignment, logname="Weather", fontsize=24):
         super().__init__(screen_dimensions, alignment, logname, fontsize)
         self._description = "This panel is used to display the weather."
 
