@@ -116,7 +116,8 @@ def main():
         loop.run_forever()
     except SystemExit:
         logger.info("[Main] Exiting...")
-        task.cancel()
+        if not task.done():
+            task.cancel()
         loop.run_until_complete(task)
         loop.stop()
         loop.close()
