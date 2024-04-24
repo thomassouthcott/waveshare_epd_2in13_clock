@@ -7,7 +7,7 @@ import os
 from PIL import Image,ImageDraw,ImageFont, ImageOps
 
 from constants import get_config, picdir
-logger = logging.getLogger(get_config().prog)
+logger = logging.getLogger()
 
 
 class Panel:
@@ -50,6 +50,7 @@ class Panel:
             alignment,
             self._alignment[1]
         )
+        logger.debug("[%s Panel] Vertical alignment changed to %s", self._logname, alignment)
 
     def set_horizontal_alignment(self, alignment):
         """Set the horizontal alignment of the panel."""
@@ -57,6 +58,7 @@ class Panel:
             self._alignment[0],
             alignment
         )
+        logger.debug("[%s Panel] Horizontal alignment changed to %s", self._logname, alignment)
 
     def get_font(self):
         """Return the font used by the panel."""
@@ -65,6 +67,7 @@ class Panel:
     def set_font(self, font):
         """Set the font used by the panel."""
         self._font = font
+        logger.debug("[%s Panel] Font changed to %s", self._logname, font)
 
     def reset_canvas(self):
         """Reset the canvas base image."""

@@ -7,7 +7,7 @@ from lib.frame_builder.panel import Panel
 
 from constants import get_config
 
-logger = logging.getLogger(get_config().prog)
+logger = logging.getLogger()
 
 class ClockPanel(Panel):
     """Clock Panel class, displays the current time."""

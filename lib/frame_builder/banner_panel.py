@@ -7,7 +7,7 @@ from PIL import Image,ImageOps
 from constants import get_config, BannerTypes
 from lib.frame_builder.service_panel import ServicePanel
 
-logger = logging.getLogger(get_config().prog)
+logger = logging.getLogger()
 
 def get_banner_types():
     """Returns a dictionary of InfoPanel child classes."""
@@ -15,11 +15,11 @@ def get_banner_types():
         BannerTypes.QOTD: BannerPanel
     }
 
-def get_banner(panelType=None, screendimensions=None):
-    """Returns an InfoPanel child class based on the panelType."""
+def get_banner(panel_type=None, screendimensions=None):
+    """Returns an BannerPanel child class based on the panelType."""
     return get_banner_types().get(
-        panelType,
-        lambda args: logger.debug("panelType [%s] not recognised. Ignoring Panel.", panelType)
+        panel_type,
+        lambda args: logger.debug("panel_type [%s] not recognised. Ignoring Panel.", panel_type)
     )(screendimensions)
 
 ##Class for Full-Length Banner panels opposite the time, maybe scrolling text?

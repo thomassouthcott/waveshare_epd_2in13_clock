@@ -11,7 +11,7 @@ from lib.frame_builder.clock_panel import ClockPanel
 import lib.frame_builder.info_panel as InfoPanels
 import lib.frame_builder.banner_panel as BannerPanels
 
-logger = logging.getLogger(get_config().prog)
+logger = logging.getLogger()
 
 class Frame:
     """Frame class, creates frames for the screen."""
@@ -187,9 +187,9 @@ class Frame:
         if(override or self._alignment_changed):
             if self._alignment_changed :
                 self._alignment_changed = False
-                logger.debug("Alignment changed. Redrawing the screen, no panels updated.")
+                logger.debug("[Frame] Alignment changed. Redrawing the screen, no panels updated.")
             else:
-                logger.debug("Override set. Redrawing the screen, no panels updated.")
+                logger.debug("[Frame] Override set. Redrawing the screen, no panels updated.")
             self._paste_background()
             self._paste_clock()
             self._paste_info_panel()

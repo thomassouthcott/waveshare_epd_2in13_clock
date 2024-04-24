@@ -5,7 +5,7 @@ from lib.frame_builder.panel import Panel
 
 from constants import get_config
 
-logger = logging.getLogger(get_config().prog)
+logger = logging.getLogger()
 
 ##Class for Panels which seed from APIs
 class ServicePanel(Panel):
@@ -20,7 +20,6 @@ class ServicePanel(Panel):
     def draw(self):
         """Draws the panel."""
         if self._drawn:
-            logger.debug("[%s Panel] Text has not changed. Not drawing the text", self._logname)
             return None
         super().draw()
         self._draw()

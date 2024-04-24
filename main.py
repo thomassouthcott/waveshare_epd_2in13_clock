@@ -9,8 +9,12 @@ from constants import HorizontalAlignment, VerticalAlignment, get_config
 import clock
 from lib.frame_builder.info_panel import get_info_types
 
-formatter = logging.Formatter("%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s")
-logger = logging.getLogger(get_config().prog)
+# Set up logging
+# from https://stackoverflow.com/questions/13733552/logger-configuration-to-log-to-file-and-print-to-stdout
+# thanks https://stackoverflow.com/users/1537951/waterboy
+# the first result when I searched "python logging to file and console"
+formatter = logging.Formatter("%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s] %(message)s")
+logger = logging.getLogger()
 
 fileHandler = logging.FileHandler(get_config().logging.file)
 fileHandler.setFormatter(formatter)
@@ -23,7 +27,15 @@ logger.setLevel(get_config().logging.level)
 
 prog= clock.Clock()
 
-async def set_background(reader, writer, image):
+def log_input(func):
+    """Decorator to log the input of the function."""
+    async def wrapper(reader, writer, *args, **kwargs):
+        """Wrapper for the function."""
+        logger.info("[CLI] [%s] Received input: %s", func.__name__, args)
+        await func(*args, **kwargs)
+    return wrapper
+
+async def set_background(i):
     """Set the background image of the screen."""
     pass
 
@@ -48,7 +60,7 @@ async def get_info_panel_descriptions(reader, writer):
     writer.write(prog.get_info_panel_descriptions())
 
 def make_cli():
-    """Create the CLI for the program."""
+    """Create the Command Line Interface for the program."""
     background_parser = argparse.ArgumentParser(
         description="Set the background image of the screen"
     )
@@ -88,6 +100,16 @@ def main():
     task = None
     try:
         logger.debug("[Main] Starting main...")
+        logger.info(r"""
+        __________        _________ .__                 __    
+        \______   \___.__.\_   ___ \|  |   ____   ____ |  | __
+        |     ___<   |  |/    \  \/|  |  /  _ \_/ ___\|  |/ /
+        |    |    \___  |\     \___|  |_(  <_> )  \___|    < 
+        |____|    / ____| \______  /____/\____/ \___  >__|_ \
+                  \/             \/                 \/     \/
+        """)
+        logger.info("Version: %s", get_config().version)
+        logger.info("Author: %s", get_config().author)
         loop = asyncio.get_event_loop()
         task = loop.create_task(prog.run_clock())
         loop.run_until_complete(make_cli().interact())
@@ -98,6 +120,5 @@ def main():
         loop.run_until_complete(task)
         loop.stop()
         loop.close()
-        logger.info("[Main] DONE")
 
 main()
