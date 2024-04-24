@@ -5,7 +5,8 @@ from enum import Enum
 import logging
 import os
 
-
+logger = logging.getLogger()
+#Images
 picdir = os.path.join(
     os.path.dirname(
         os.path.realpath(__file__)

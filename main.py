@@ -37,13 +37,13 @@ def log_input(func):
 
 async def set_background(i):
     """Set the background image of the screen."""
-    pass
+    prog.set_background(i)
 
-async def set_text(reader, writer, text):
+async def set_text(text):
     """Set the text of the Text Panel."""
     prog.set_text_panel(text)
 
-async def set_panel(reader, writer, panelType):
+async def set_panel(panel_type):
     """Set the PanelType of the InfoPanel."""
     #if panelType in getPanelTypes().keys():
         #prog.setPanel(panelType)
@@ -51,13 +51,17 @@ async def set_panel(reader, writer, panelType):
         #prog.setPanel()
     pass
 
-async def align(reader, writer, x, y):
+async def align(x, y):
     """Set the alignment of the clock."""
     prog.set_alignment(VerticalAlignment[x], HorizontalAlignment[y])
 
-async def get_info_panel_descriptions(reader, writer):
+async def get_info_panel_descriptions():
     """Print the descriptions of the InfoPanels."""
-    writer.write(prog.get_info_panel_descriptions())
+    prog.get_info_panel_descriptions()
+
+async def get_banner_panel_descriptions():
+    """Print the descriptions of the BannerPanels."""
+    prog.get_banner_panel_descriptions()
 
 def make_cli():
     """Create the Command Line Interface for the program."""
@@ -65,7 +69,7 @@ def make_cli():
         description="Set the background image of the screen"
     )
     background_parser.add_argument('-i', type=str, help="Filename of the image in /bmp/",
-                                  required=True)
+                                  required=False, default=None)
 
     text_parser = argparse.ArgumentParser(description="Set the text of the Text Panel")
     text_parser.add_argument('-t', type=str, help="Text to display", required=True)
@@ -80,16 +84,21 @@ def make_cli():
     align_parser.add_argument("-y",type=str, help="Horizontal Alignment",
                              required=True, choices=HorizontalAlignment.__members__.keys())
 
-    get_panel_info_parser = argparse.ArgumentParser(
+    get_info_description_parser = argparse.ArgumentParser(
         description="Get the descriptions of the InfoPanels"
     )
 
+    get_banner_description_parser = argparse.ArgumentParser(
+        description="Get the descriptions of the BannerPanels"
+    )
+
     commands = {
-        "background": (set_background, background_parser),
-        "display": (set_text, text_parser),
-        "set-panel": (set_panel, panel_parser),
-        "align": (align, align_parser),
-        "panels": (get_info_panel_descriptions, get_panel_info_parser)
+        "background": (log_input(set_background), background_parser),
+        "display": (log_input(set_text), text_parser),
+        "set-panel": (log_input(set_panel), panel_parser),
+        "align": (log_input(align), align_parser),
+        "info-panels": (log_input(get_info_panel_descriptions), get_info_description_parser),
+        "banner-panels": (log_input(get_banner_panel_descriptions), get_banner_description_parser)
         #"toggle-panel": (togglepanel, toggleparser), Toggles panel on/off
         #will require adding show logic to the infopanel class
         }
