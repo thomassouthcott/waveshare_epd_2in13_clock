@@ -6,7 +6,7 @@ import logging
 import asyncio
 
 from lib.frame_builder.frame import Frame
-from lib.waveshare_epd import epd2in13_V4
+from lib.epd_driver import EPDDriver
 
 from constants import get_config
 
@@ -17,12 +17,9 @@ class Clock():
         Use the run_clock method to start the clock."""
     def __init__(self):
         logger.debug("[epd2in13_V4] Initialising Clock...")
-        self._epd = epd2in13_V4.EPD()
+        self._epd_driver = EPDDriver()
         self._frame = Frame(
-            (
-                self._epd.height,
-                self._epd.width
-            ),
+            self._epd_driver.get_dimensions(),
             (
                 get_config().frame.v_alignment,
                 get_config().frame.h_alignment
@@ -66,15 +63,14 @@ class Clock():
         """Async function to run the clock. Sleeps for 0.33 seconds to allow for cli."""
         try:
             logger.info("[Clock] BEGIN")
-            self.init()
-            self.set_screen()
+            self._epd_driver.init()
+            self._epd_driver.clear()
             logger.debug("[Clock] Starting Clock...")
-            self._frame.set_background(get_config().frame.default_background)
+            self._epd_driver.set_screen(self._frame.get_image())
             while True:
-                image = self._frame.draw()
-                if image is not None:
-                    self.update_screen()
-                else:
+                image, changes = self._frame.draw()
+                if image is None:
+                    self._epd_driver.update_screen(image)
                     await asyncio.sleep(0.33)
                 else:
                     logger.info(
@@ -88,26 +84,20 @@ class Clock():
         except IOError as e:
             logger.error("\tIOError")
             logger.error(e)
-            self.shutdown()
+            self._epd_driver.shutdown()
             exit(1)
 
         except asyncio.CancelledError:
             logger.debug("Cancelled")
-            self.shutdown()
+            self._epd_driver.shutdown()
             exit()
 
         except KeyboardInterrupt:
             print()
-            self.shutdown()
+            self._epd_driver.shutdown()
             exit()
 
         except SystemExit:
             logger.debug("System Exit")
-            self.shutdown()
-            exit()
-
-        except e:
-            logger.error("Something went wrong...")
-            logger.error(e)
-            self.shutdown()
+            self._epd_driver.shutdown()
             exit()
