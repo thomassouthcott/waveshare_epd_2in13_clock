@@ -27,14 +27,14 @@ def get_info(panel_type=None, screendimensions=None):
 ##Class for Panels next to the time
 class InfoPanel(ServicePanel):
     """Class for panels that display information next to the time."""
-    def __init__(self, screen_dimensions, alignment,
+    def __init__(self, screen_dimensions, alignment, service = None,
                  logname="Info", fontsize=24):
         super().__init__(
             (
                 screen_dimensions[0]-get_config().frame.clock_dimensions[0],
                 get_config().frame.clock_dimensions[1]
             ),
-            alignment, logname=logname, fontsize=fontsize)
+            alignment, service, logname=logname, fontsize=fontsize)
         self._drawn = False
         self._description = "This description is given when the panels command is called."
         super().draw()
@@ -50,16 +50,16 @@ class InfoPanel(ServicePanel):
 class TextPanel(InfoPanel):
     """Class for panels that display text."""
     def __init__(self, screen_dimensions, alignment, logname="Text", fontsize=24):
-        super().__init__(screen_dimensions, alignment, logname, fontsize)
+        super().__init__(screen_dimensions, alignment, logname=logname, fontsize=fontsize)
         self._description = "This panel is used to display text."
 
     def _draw(self):
-        self._imagedraw.text((0,0), self._text, font = self._font, fill = 0)
-        self._latest_change = f"Text now displays {self._text}"
+        self._imagedraw.text((0,0), self._data, font = self._font, fill = 0)
+        self._latest_change = f"Text now displays {self._data}"
 
     def set_text(self, text):
         """Set the text of the text panel."""
-        self._text = text
+        self._data = text
         self._drawn = False
 
 class WeatherPanel(InfoPanel):
