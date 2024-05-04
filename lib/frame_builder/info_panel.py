@@ -65,6 +65,24 @@ class TextPanel(InfoPanel):
         self._data = text
         self._drawn = False
 
+DATE_FORMAT = "%d/%m/%Y"
+
+class DatePanel(InfoPanel):
+    """Class for panels that display the current date."""
+    def __init__(self, screen_dimensions, alignment, logname="Date", fontsize=24):
+        super().__init__(screen_dimensions, alignment, logname=logname, fontsize=fontsize)
+        self._description = "This panel is used to display the current date."
+
+    def _draw(self):
+        self._imagedraw.text((26,3), self._data, font = self._font, fill = 0)
+        self._latest_change = f"Date now displays {self._data}"
+
+    def update(self):
+        if (self._last_refresh is None or self._data != time.strftime(DATE_FORMAT)):
+            self._data = time.strftime(DATE_FORMAT)
+            self._drawn = False
+            self._last_refresh = time.time()
+
 class WeatherPanel(InfoPanel):
     """Class for panels that display the weather."""
     def __init__(self, screen_dimensions, alignment, logname="Weather", fontsize=18):
@@ -130,4 +148,4 @@ class WeatherPanel(InfoPanel):
 
 ##GMAIL PANEL (UNREAD EMAILS (UNREAD IMPORTANT), (TOTAL OF) MULTI-ACCOUNT SUPPORT)
 
-##DATE PANEL (DATE, MULTI-ACCOUNT SUPPORT)
+##FITBIT PANEL (STEPS)

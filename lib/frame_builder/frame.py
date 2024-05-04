@@ -32,7 +32,8 @@ class Frame:
         #Panels
         self._clock_panel = ClockPanel(self._alignment.alignment)
         self._info_panels = []
-        self._info_panels.append(InfoPanels.WeatherPanel(self._dimensions,self._alignment.alignment))
+        #self._info_panels.append(InfoPanels.WeatherPanel(self._dimensions,self._alignment.alignment))
+        self._info_panels.append(InfoPanels.DatePanel(self._dimensions,self._alignment.alignment))
         self._banner_panels = []
         self._banner_panels.append(BannerPanels.BannerPanel(self._alignment.alignment))
 
