@@ -64,8 +64,28 @@ class FrameConfig:
         panels = get_config_item(config,"FRAME","BANNERS_ENABLED").split(",")
         self.banners = [BannerTypes[item] for item in panels]
 
+@dataclasses.dataclass
+class WeatherConfig:
+    """Class to hold the weather configuration"""
+    def __init__(self):
+        try:
+            config = configparser.ConfigParser()
+            config.read("config.ini")
+        except Exception as exc:
+            raise FileNotFoundError("Config file not found") from exc
+        self.api_key = get_config_item(config,"WEATHER","API_KEY")
+        self.api_urls = get_config_item(config,"WEATHER","API_URL").split(",")
+        self.api_refresh_interval = int(get_config_item(config,"WEATHER","REFRESH_INTERVAL"))
+        self.city = get_config_item(config,"WEATHER","CITY")
+        self.units = get_config_item(config,"WEATHER","UNITS")
+
 _config = Config()
+_weather_config = WeatherConfig()
 
 def get_config():
     """Returns the currently loaded configuration"""
     return _config
+
+def get_weather_config():
+    """Returns the currently loaded weather configuration"""
+    return _weather_config

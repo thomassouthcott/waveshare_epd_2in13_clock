@@ -1,12 +1,15 @@
 """InfoPanel Classes for displaying information next to the time on the eInk display."""
 
 import logging
+import time
 
-from PIL import Image,ImageOps
+from PIL import Image,ImageOps,ImageFont
 
 from config import get_config
 from constants import HorizontalAlignment, InfoTypes
+from image_helper import get_weather_icon
 from lib.frame_builder.service_panel import ServicePanel
+from lib.services.weather_api import WeatherService
 
 logger = logging.getLogger()
 
@@ -64,10 +67,67 @@ class TextPanel(InfoPanel):
 
 class WeatherPanel(InfoPanel):
     """Class for panels that display the weather."""
-    def __init__(self, screen_dimensions, alignment, logname="Weather", fontsize=24):
-        super().__init__(screen_dimensions, alignment, logname, fontsize)
+    def __init__(self, screen_dimensions, alignment, logname="Weather", fontsize=18):
+        super().__init__(screen_dimensions, alignment, WeatherService(), logname, fontsize)
         self._description = "This panel is used to display the weather."
 
-##GMAIL PANEL (UNREAD EMAILS (UNREAD IMPORTANT), (ALTENATES BETWEEN) MULTI-ACCOUNT SUPPORT)
+    def _update(self):
+        self._last_refresh = time.time()
+        response = self._service.get_data()
+        if isinstance(self._data, dict):
+            if self._data["icon"] != response["icon"]:
+                self._data["icon"] = response["icon"]
+                self._drawn = False
+            if self._data["temp"] != response["temp"]:
+                self._data["temp"] = response["temp"]
+                self._drawn = False
+            if self._data["description"] != response["conditions"]:
+                self._data["description"] = response["conditions"]
+                self._drawn = False
+        else:
+            self._drawn = False
+            self._data = dict()
+            self._data["icon"] = response["icon"]
+            self._data["temp"] = response["temp"]
+            self._data["description"] = response["conditions"]
+
+    def _draw(self):
+        if isinstance(self._data, dict):
+            self._draw_temp()
+            self._draw_conditions()
+            self._paste_icon()
+            self._latest_change = f"Weather now displays {self._convert_temp(self._data['temp'])} and {self._data['description']}"
+            print(self._latest_change)
+        else:
+            self._imagedraw.text((4,4), 'loading...', font = self._font, fill = 0)
+    
+    def _paste_icon(self):
+        """Paste the weather icon onto the image."""
+        #Get the weather icon folder in pic
+        icon = Image.open(get_weather_icon(self._data["icon"]))
+        self._image.paste(icon, (2,2))
+
+    def _draw_temp(self):
+        """Draw the temperature on the image."""
+        temp = self._convert_temp(self._data["temp"])
+        font = ImageFont.truetype(self._font.path, 26)
+        self._imagedraw.text((32,2), temp[0:4], font = font, fill = 0)
+        self._imagedraw.text((88,2), temp[4::1], font = self._font, fill = 0)
+
+    def _draw_conditions(self):
+        """Draw the weather conditions on the image."""
+        ##need to truncate text if too long
+        #how too long?
+        font = ImageFont.truetype(self._font.path, 14)
+        print(f"space available: {self._dimensions[0]-90}, text length: {len(self._data['description'])}")
+        self._imagedraw.text((84,16), self._data["description"], font = font, fill = 0)
+
+    def _convert_temp(self, temp):
+        """Convert the temperature to the correct units."""
+        if self._service.units == "imperial":
+            return f"{str(temp)[0:4]}°F"
+        return f"{str(float(temp - 32) * 5 / 9)[0:4]}°C"
+
+##GMAIL PANEL (UNREAD EMAILS (UNREAD IMPORTANT), (TOTAL OF) MULTI-ACCOUNT SUPPORT)
 
 ##DATE PANEL (DATE, MULTI-ACCOUNT SUPPORT)

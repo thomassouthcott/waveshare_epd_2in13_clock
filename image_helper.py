@@ -30,3 +30,9 @@ def check_image_path(filename):
 def get_all_images():
     """Return a list of all images in the /pic/ directory"""
     return [f for f in os.listdir(picdir) if f.endswith(".bmp")]
+
+def get_weather_icon(icon):
+    """Return the full path of the weather icon."""
+    if os.path.exists(os.path.join(picdir, "weather", f"{icon}.bmp")):
+        return os.path.join(picdir, "weather", f"{icon}.bmp")
+    logger.error("Weather icon %s not found", icon)
