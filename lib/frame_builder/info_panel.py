@@ -7,9 +7,10 @@ from PIL import Image,ImageOps,ImageFont
 
 from config import get_config
 from constants import HorizontalAlignment, InfoTypes
-from image_helper import get_weather_icon
+from image_helper import get_weather_icon, get_fitbit_icon
 from lib.frame_builder.service_panel import ServicePanel
 from lib.services.weather_api import WeatherService
+from lib.services.fitbit_api import FitbitService
 
 logger = logging.getLogger()
 
@@ -92,6 +93,9 @@ class WeatherPanel(InfoPanel):
     def _update(self):
         self._last_refresh = time.time()
         response = self._service.get_data()
+        if response is None:
+            self._drawn = True
+            return
         if isinstance(self._data, dict):
             if self._data["icon"] != response["icon"]:
                 self._data["icon"] = response["icon"]
@@ -115,7 +119,6 @@ class WeatherPanel(InfoPanel):
             self._draw_conditions()
             self._paste_icon()
             self._latest_change = f"Weather now displays {self._convert_temp(self._data['temp'])} and {self._data['description']}"
-            print(self._latest_change)
         else:
             self._imagedraw.text((4,4), 'loading...', font = self._font, fill = 0)
     
@@ -148,4 +151,36 @@ class WeatherPanel(InfoPanel):
 
 ##GMAIL PANEL (UNREAD EMAILS (UNREAD IMPORTANT), (TOTAL OF) MULTI-ACCOUNT SUPPORT)
 
-##FITBIT PANEL (STEPS)
+class FitbitPanel(InfoPanel):
+    """Class for panels that display fitbit data."""
+    def __init__(self, screen_dimensions, alignment, logname="Fitbit", fontsize=28):
+        super().__init__(screen_dimensions, alignment, FitbitService(), logname=logname, fontsize=fontsize)
+        self._description = "This panel is used to display fitbit steps."
+
+    def _update(self):
+        self._last_refresh = time.time()
+        response = self._service.get_data()
+        if response is not None:
+            if self._data is not None or self._data['summary']['steps'] != response['summary']['steps']:
+                self._drawn = False
+            self._data = response
+            
+
+    def _draw(self):
+        if self._data is None:
+            self._imagedraw.text((4,4), 'loading...', font = self._font, fill = 0)
+            return
+        self._draw_icon()
+        self._draw_steps(self._data['summary']['steps'],self._data['goals']['steps'])
+        self._latest_change = f"Fitbit now displays {self._data['summary']['steps']}/{self._data['goals']['steps']} steps"
+
+    def _draw_icon(self):
+        """Draw the fitbit icon on the image."""
+        icon = Image.open(get_fitbit_icon("steps")).resize((24,24))
+        self._image.paste(icon, (3,6))
+
+    def _draw_steps(self, actual, goal):
+        """Draw the steps on the image."""
+        self._imagedraw.text((32,-3), f"{actual:06}", font = self._font, fill = 0)
+        font = ImageFont.truetype(self._font.path, 12)
+        self._imagedraw.text((112,21), f"of {goal}", font = font, fill = 0)
