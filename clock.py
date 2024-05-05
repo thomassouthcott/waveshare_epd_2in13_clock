@@ -62,6 +62,7 @@ class Clock():
     async def run_clock(self):
         """Async function to run the clock. Sleeps for 0.33 seconds to allow for cli."""
         try:
+            await asyncio.sleep(1)
             logger.info("[Clock] BEGIN")
             self._epd_driver.init()
             self._epd_driver.clear()
