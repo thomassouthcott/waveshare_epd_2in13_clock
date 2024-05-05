@@ -56,7 +56,7 @@ class FrameConfig:
         self.h_alignment = HorizontalAlignment[get_config_item(config,"FRAME","H_ALIGNMENT")]
         filename=get_config_item(config,"FRAME","DEFAULT_BACKGROUND")
         if filename == "":
-            logger.warning("[CONFIG] No default background image specified.")
+            logger.debug("[CONFIG] No default background image specified.")
             self.default_background = None
         elif check_image_path(filename):
             self.default_background = filename

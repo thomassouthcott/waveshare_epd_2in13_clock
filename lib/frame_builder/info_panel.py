@@ -5,7 +5,7 @@ import time
 
 from PIL import Image,ImageOps,ImageFont
 
-from config import get_config
+from config import get_config, get_textbox_config
 from constants import HorizontalAlignment, InfoTypes
 from image_helper import get_weather_icon, get_fitbit_icon
 from lib.frame_builder.service_panel import ServicePanel
@@ -53,9 +53,13 @@ class InfoPanel(ServicePanel):
 
 class TextPanel(InfoPanel):
     """Class for panels that display text."""
-    def __init__(self, screen_dimensions, alignment, logname="Text", fontsize=24):
+    def __init__(self, screen_dimensions, alignment, logname="Text", fontsize=32):
         super().__init__(screen_dimensions, alignment, logname=logname, fontsize=fontsize)
         self._description = "This panel is used to display text."
+        if get_textbox_config().text:
+            self._data = get_textbox_config().text
+            self.reset_canvas()
+            self._draw()
 
     def _draw(self):
         self._imagedraw.text((0,0), self._data, font = self._font, fill = 0)
@@ -140,7 +144,6 @@ class WeatherPanel(InfoPanel):
         ##need to truncate text if too long
         #how too long?
         font = ImageFont.truetype(self._font.path, 14)
-        print(f"space available: {self._dimensions[0]-90}, text length: {len(self._data['description'])}")
         self._imagedraw.text((84,16), self._data["description"], font = font, fill = 0)
 
     def _convert_temp(self, temp):
