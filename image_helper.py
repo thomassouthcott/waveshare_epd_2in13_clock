@@ -36,3 +36,9 @@ def get_weather_icon(icon):
     if os.path.exists(os.path.join(picdir, "weather", f"{icon}.bmp")):
         return os.path.join(picdir, "weather", f"{icon}.bmp")
     logger.error("Weather icon %s not found", icon)
+
+def get_fitbit_icon(icon):
+    """Return the full path of the fitbit icon."""
+    if os.path.exists(os.path.join(picdir, "fitbit", f"{icon}.bmp")):
+        return os.path.join(picdir, "fitbit", f"{icon}.bmp")
+    logger.error("Fitbit icon %s not found", icon)
